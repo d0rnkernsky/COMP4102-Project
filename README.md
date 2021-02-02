@@ -1,7 +1,7 @@
 ## COMP4102 - Final Project
 
 #### Project team:
-Erica Warriner 101002942
+Erica Warriner 101002942  
 Daniil Kulik 101138752
 
 #### Title:  

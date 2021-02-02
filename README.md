@@ -19,8 +19,8 @@ Inpainting of small regions within a single image is fairly simple with the use 
 
 By completing this project, we hope to learn how to:
 - detect interest points and extract descriptors,
-- match descriptors between 2+ images,
-- compute homography to align 2+ images,
+- match descriptors between 4+ images,
+- compute homography to align 4+ images,
 - create an interactive application for object removal, and
 - perform inpainting with OpenCV.
 

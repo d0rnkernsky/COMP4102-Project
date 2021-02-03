@@ -56,4 +56,14 @@ The project evaluation will be based on several criteria:
 
 #### Schedule:
 
-March 31 - demo program is ready
+|Week | Dates          | Erica                                                              | Daniil  |
+|:---:|:--------------:|------------------------------------------------------------------  | ------- |
+|1    | Feb 5 - Feb 10 | Write code for detecting interest points and extracting descriptors|         |
+|2    | Feb 11 - Feb 17| Write code for matching descriptors between 2 images               |         |
+|3    | Feb 18 - Feb 24| Write code for computing homography                                |         |
+|4    | Feb 25 - Mar 3 | Write code for aligning images using homography                    |         |
+|5    | Mar 4 - Mar 10 | Modify code to use 4+ source images                                |         |
+|6    | Mar 11 - Mar 17| Test code for correct and seamless panorama creation               |         |
+|7    | Mar 18 - Mar 24| (Extra time: Assist Daniil, work on extra tasks)                   |         |
+|8    | Mar 24 - Mar 31| (Extra time: Assist Daniil, work on extra tasks)                   |         |
+|9    | Mar 31 - Apr ? | Prepare demonstration/presentation                                 |         |

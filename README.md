@@ -5,7 +5,7 @@ Erica Warriner 101002942
 Daniil Kulik 101138752
 
 #### Title:  
-Panorama creation with subsequent manual object removal
+Panorama creation with subsequent objects removal
 
 #### Summary: 
 The ultimate goal of this project is to create a tool that can produce panoramas from 4-5 images. Subsequently, a user will be able to choose an object to remove from the panorama. This project will work with two computer vision problems: (1) image stitching to produce a panorama and (2) inpainting. 

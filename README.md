@@ -33,7 +33,6 @@ Inpainting of small regions within a single image (see Figure 2) is fairly simpl
 <p align="center">
   <i>Figure 2</i>. Inpainting after removing a subject from an image. From "Texture Synthesis and Hole-Filling" by Derek Hoiem, 2019, https://courses.engr.illinois.edu/cs445/fa2019/lectures/Lecture%2007%20-%20Texture%20Synthesis%20-%20CP%20Fall%202019.pdf
 </p>
-<br>
 
 By completing this project, we hope to learn how to:
 - detect interest points and extract descriptors,

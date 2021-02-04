@@ -67,3 +67,13 @@ The project evaluation will be based on several criteria:
 |7    | Mar 18 - Mar 24| (Extra time: Assist Daniil, work on extra tasks)                   |         |
 |8    | Mar 24 - Mar 31| (Extra time: Assist Daniil, work on extra tasks)                   |         |
 |9    | Mar 31 - Apr ? | Prepare demonstration/presentation                                 |         |
+
+
+#### References:
+1. Criminisi, A., Pérez, P., & Toyama, K. (2004). Region filling and object removal by exemplar-based image inpainting. IEEE Transactions on Image Processing. https://doi.org/10.1109/TIP.2004.833105
+
+2. Lin, C. C., Pankanti, S. U., Ramamurthy, K. N., & Aravkin, A. Y. (2015). Adaptive as-natural-as-possible image stitching. Proceedings of the IEEE Computer Society Conference on Computer Vision and Pattern Recognition. https://doi.org/10.1109/CVPR.2015.7298719
+
+
+
+

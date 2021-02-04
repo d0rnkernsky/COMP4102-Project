@@ -11,6 +11,7 @@ Panorama creation with subsequent object removal
 The ultimate goal of this project is to create a tool that can produce panoramas from 4-5 images. Subsequently, a user will be able to choose an object to remove from the panorama. This project will work with two computer vision problems: (1) image stitching to produce a panorama and (2) inpainting. 
 
 #### Background:
+The object removal part of the project is based on the approach proposed in [1]. In this project we will work on handling depth ambiguities and curved object patching with better precision. For the image stitching we will employ the method proposed in [2] and extend it to produce seamless panoramas from 3+ source images with compensating for parallax to accomodate large motion. 
 
 #### The Challenge:
 The task of image stitching to produce a panorama (see Figure 1) can be completed with moderate difficulty using OpenCV functions. This task is made more complex with the project requirement of producing panoramas from 4-5 images, rather than using only 2 source images. With these additions, there will be several "middle" images that will need to be matched to descriptors on both its left and right neighbours. Not only will the added images increase the complexity of image stitching, but they will also create a higher potential for error due to slight variations between the features of each image (e.g. brightness, rotation, etc.). The process of creating a panorama for 4-5 images will require more time than the traditional 2-image panorama, to ensure a seamless result.
@@ -47,8 +48,6 @@ The ultimate goal of this project is to build a program that is capable of produ
 
 Extra goals include extending panorama generation in more than one direction. Traditional panorama creation tools allow horizontal or vertical panoramas. If time permits, diagonal panoramas will be explored. Another possible extension is to create a mobile application with the same functionality that can work with limited computational resources.
 
-// How realistic is it for your team to get what it needs to get done within theallotted time?  Remember you only have a few weeks to get this projectcompleted
-
 The project evaluation will be based on several criteria:
 1) Correct and seamless panorama creation
 2) Correct and seamless object removal
@@ -56,17 +55,17 @@ The project evaluation will be based on several criteria:
 
 #### Schedule:
 
-|Week | Dates          | Erica                                                              | Daniil  |
-|:---:|:--------------:|------------------------------------------------------------------  | ------- |
-|1    | Feb 5 - Feb 10 | Write code for detecting interest points and extracting descriptors|         |
-|2    | Feb 11 - Feb 17| Write code for matching descriptors between 2 images               |         |
-|3    | Feb 18 - Feb 24| Write code for computing homography                                |         |
-|4    | Feb 25 - Mar 3 | Write code for aligning images using homography                    |         |
-|5    | Mar 4 - Mar 10 | Modify code to use 4+ source images                                |         |
-|6    | Mar 11 - Mar 17| Test code for correct and seamless panorama creation               |         |
-|7    | Mar 18 - Mar 24| (Extra time: Assist Daniil, work on extra tasks)                   |         |
-|8    | Mar 24 - Mar 31| (Extra time: Assist Daniil, work on extra tasks)                   |         |
-|9    | Mar 31 - Apr ? | Prepare demonstration/presentation                                 |         |
+|Week | Dates          | Erica                                                              | Daniil                                                         |
+|:---:|:--------------:|------------------------------------------------------------------  | -------------------------------------------------------------- |
+|1    | Feb 5 - Feb 10 | Write code for detecting interest points and extracting descriptors| Write code for isophote-driven image-sampling process          |
+|2    | Feb 11 - Feb 17| Write code for matching descriptors between 2 images               | Write code for region-filling                                  |
+|3    | Feb 18 - Feb 24| Write code for computing homography                                | Write code for computing patch priorities                      |
+|4    | Feb 25 - Mar 3 | Write code for aligning images using homography                    | Write code for propagating texture and structure information   |
+|5    | Mar 4 - Mar 10 | Modify code to use 4+ source images                                | Modify code to handle parallax effect                          |
+|6    | Mar 11 - Mar 17| Test code for correct and seamless panorama creation               | Test code for correct and seamless object removal and patching |
+|7    | Mar 18 - Mar 24| (Extra time: Assist Daniil, work on extra tasks)                   | Write code for a simple desktop app that employs both features |
+|8    | Mar 24 - Mar 31| (Extra time: Assist Daniil, work on extra tasks)                   | Complete app testing                                           |
+|9    | Mar 31 - Apr ? | Prepare demonstration/presentation                                                                                                  |
 
 
 #### References:

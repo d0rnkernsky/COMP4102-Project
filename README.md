@@ -65,7 +65,7 @@ The project evaluation will be based on several criteria:
 |6    | Mar 11 - Mar 17| Test code for correct and seamless panorama creation               | Test code for correct and seamless object removal and patching |
 |7    | Mar 18 - Mar 24| (Extra time: Assist Daniil, work on extra tasks)                   | Write code for a simple desktop app that employs both features |
 |8    | Mar 24 - Mar 31| (Extra time: Assist Daniil, work on extra tasks)                   | Complete app testing                                           |
-|9    | Mar 31 - Apr ? | Prepare demonstration/presentation                                                                                                  |
+|9    | Mar 31 - Apr ? |                                                        Prepare demonstration/presentation                                           |
 
 
 #### References:

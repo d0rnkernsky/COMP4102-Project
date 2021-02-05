@@ -12,25 +12,36 @@ def build_panorama(images):
     # Iterate through images, adding info to nested dictionary
     for i in range(1, len(images) + 1):
 
-        # Name image based on index
-        index = "image_" + i
+        # Name image dictionary based on index
+        index = "image_" + str(i)
 
         # Create nested dictionary for current image
         imageDict[index] = {}
 
         # Create variables for current image to simplify code
         thisImage = imageDict[index]
+        thisImage["image"] = images[i-1]
 
-        # Detect keypoints
-        thisImage[keypoints] = detectAndDescribe(images[i-1])[0]
+        # Convert image to grayscale to detect keypoints
+        thisImage["grey"] = cv2.cvtColor(thisImage["image"], cv2.COLOR_BGR2GRAY)
 
-        # Extract features
-        thisImage[features] = detectAndDescribe(images[i-1])[1]
+        # Find keypoints using SIFT
+        feature_finder = cv2.SIFT_create()
+        thisImage["keypoints"] = feature_finder.detect(thisImage["grey"], None)
+
+        # Find features using SIFT
+        thisImage["keypoints"] = feature_finder.compute(thisImage["grey"],
+                                                        thisImage["keypoints"])[0]
+        thisImage["features"] = feature_finder.compute(thisImage["grey"],
+                                                        thisImage["keypoints"])[1]
 
     # Iterate through images to build panorama
     for i in range(1, len(images) + 1):
 
-        # Create variable for current image to simplify code
+        # Get current image dictionary based on index
+        index = "image_" + str(i)
+
+        # Create variable for current image dictionary to simplify code
         thisImage = imageDict[index]
 
         # Build panorama on right neighbour (if exists)
@@ -41,18 +52,22 @@ def build_panorama(images):
 
             # Match features to right neighbour
             M = matchKeypoints(thisImage[keypoints],
-                            rightImage[keypoints],
-                            thisImage[features],
-                            rightImage[features])
+                               rightImage[keypoints],
+                               thisImage[features],
+                               rightImage[features])
 
 def main():
+
+    # Create array to hold sample images
+    images = []
+
     # Read sample images from local directory
-    images[0] = cv2.imread('image1.jpg')
-    images[1] = cv2.imread('image2.jpg')
-    images[2] = cv2.imread('image3.jpg')
-    images[3] = cv2.imread('image4.jpg')
-    images[4] = cv2.imread('image5.jpg')
-    images[5] = cv2.imread('image6.jpg')
+    images.append(cv2.imread(r'Images\Example_1\1.jpg'))
+    images.append(cv2.imread(r'Images\Example_1\2.jpg'))
+    images.append(cv2.imread(r'Images\Example_1\3.jpg'))
+    images.append(cv2.imread(r'Images\Example_1\4.jpg'))
+    images.append(cv2.imread(r'Images\Example_1\5.jpg'))
+    images.append(cv2.imread(r'Images\Example_1\6.jpg'))
 
     # Build panorama using sample images
     build_panorama(images)

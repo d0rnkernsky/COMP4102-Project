@@ -1,7 +1,8 @@
 # Imports
-import numpy as np # Matrix operations
-import imutils     # Image processing functions
-import cv2         # OpenCV
+import numpy as np                       # Matrix operations
+import imutils                           # Image processing functions
+import cv2                               # OpenCV
+from matplotlib import pyplot as plt     # Graph plotting
 
 # Function for building panorama from array of images
 def build_panorama(images):
@@ -22,8 +23,11 @@ def build_panorama(images):
         thisImage = imageDict[index]
         thisImage["image"] = images[i-1]
 
-        # Convert image to grayscale to detect keypoints
-        thisImage["grey"] = cv2.cvtColor(thisImage["image"], cv2.COLOR_BGR2GRAY)
+        # Convert original image to RGB (for matplotlib compatibility)
+        thisImage["image"] = cv2.cvtColor(thisImage["image"], cv2.COLOR_BGR2RGB)
+
+        # Convert RGB image to greyscale to detect keypoints
+        thisImage["grey"] = cv2.cvtColor(thisImage["image"], cv2.COLOR_RGB2GRAY)
 
         # Find keypoints using SIFT
         feature_finder = cv2.SIFT_create()
@@ -48,13 +52,29 @@ def build_panorama(images):
         if (i != len(images)):
             
             # Create variable for right neighbour to simplify code
-            rightImage = imageDict["image_" + i+1]
+            rightImage = imageDict["image_" + str(i+1)]
 
-            # Match features to right neighbour
-            M = matchKeypoints(thisImage[keypoints],
-                               rightImage[keypoints],
-                               thisImage[features],
-                               rightImage[features])
+            # Create descriptor matcher
+            matcher = cv2.DescriptorMatcher_create("BruteForce")
+            
+            # Find 2 best matches for each descriptor
+            matches = matcher.knnMatch(thisImage["features"],
+                                       rightImage["features"],
+                                       2)
+
+            # Create array to store good matches
+            good_matches = []
+            
+            # Iterate through each descriptor's matches
+            for m in matches:
+
+                # Check that there are two best matches for descriptor
+                if (len(m) == 2):
+
+                    # Ensure the distance between each point is within a 
+                    # ratio of 0.75
+                    if (m[0].distance < (m[1].distance * 0.75)):
+                        good_matches.append((m[0].trainIdx, m[0].queryIdx))
 
 def main():
 

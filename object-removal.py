@@ -7,6 +7,8 @@ import sys
 import numpy as np
 import cv2 as cv
 
+ESC_KEY = 27
+
 x_init = 0
 y_init = 0
 drawing = False
@@ -39,12 +41,6 @@ def select_area(ev, x, y, flags, param):
         print(area)
 
 
-def remove_selected(in_img):
-    cv.imshow('Input', in_img)
-    cv.imshow('Output', in_img)
-    cv.waitKey()
-
-
 if __name__ == '__main__':
     if len(sys.argv) < 2:
         print("Usage: python3 object-removal.py /path/to/image")
@@ -65,8 +61,8 @@ if __name__ == '__main__':
 
     while True:
         cv.imshow('image', img)
-        c = cv.waitKey(1)
-        if c == 27:
+        key = cv.waitKey(1)
+        if key == ESC_KEY:
             break
 
     cv.destroyAllWindows()

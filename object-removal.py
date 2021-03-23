@@ -41,7 +41,7 @@ def select_area(ev, x, y, flags, param):
         print(area)
 
 
-if __name__ == '__main__':
+def main():
     if len(sys.argv) < 2:
         print("Usage: python3 object-removal.py /path/to/image")
         exit(-1)
@@ -66,3 +66,7 @@ if __name__ == '__main__':
             break
 
     cv.destroyAllWindows()
+    
+        
+if __name__ == '__main__':
+    main()

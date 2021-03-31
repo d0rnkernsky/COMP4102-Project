@@ -57,7 +57,8 @@ def build_panorama(images):
                 # Get points corresponding to good matches
                 leftPoints = []
                 rightPoints = []
-                for m in range(0, len(good_matches)):
+                for m in range(0, 40):
+                    # Check that keypoint exists
                     if (len(leftImage["keypoints"]) >= good_matches[m].trainIdx):
                         rightPoints.append(rightImage["keypoints"][good_matches[m].trainIdx].pt)
                         leftPoints.append(leftImage["keypoints"][good_matches[m].queryIdx].pt)
@@ -67,6 +68,7 @@ def build_panorama(images):
                 leftPoints = np.float32(leftPoints).reshape(-1, 1, 2)
 
                 # UNCOMMENT to draw keypoints on images + display
+                
                 '''
                 # Draw circles over original images
                 img1_with_points = rightImage["grey"].copy()
@@ -113,16 +115,12 @@ def build_panorama(images):
             plt.show()
             '''
 
-            # Get max height of left and right image
-            max_height = min(warpedImage.shape[1], leftImage["image"].shape[1])
+            # Get min height of left and right image
+            min_height = min(warpedImage.shape[1], leftImage["image"].shape[1])
 
             # Stitch left image into right image
             stitchedImage = warpedImage
-            stitchedImage[0:leftImage["image"].shape[0], 0:max_height] = leftImage["image"]
-
-            # Show stitched image
-            plt.imshow(stitchedImage)
-            plt.show()
+            stitchedImage[0:leftImage["image"].shape[0], 0:min_height] = leftImage["image"]
 
             # Crop black background from stitched image
             grey = cv2.cvtColor(stitchedImage, cv2.COLOR_BGR2GRAY)
@@ -203,11 +201,8 @@ def initialize_image(images, imageDict, stitched, i=0):
         imageDict["stitched"] = {}
         thisImage = imageDict["stitched"]
 
-        # Convert stitched image to RGB (for matplotlib compatibility)
-        #stitched = cv2.cvtColor(stitched, cv2.COLOR_BGR2RGB)
-        stitched_color = stitched
-
         # Convert RGB image to greyscale to use as left image
+        stitched_color = stitched
         stitched = cv2.cvtColor(stitched, cv2.COLOR_RGB2GRAY)
 
         # Initialize dictionary values
@@ -228,12 +223,11 @@ def main():
     images = []
 
     # Read sample images from local directory
-    images.append(cv2.imread(r'Images\Example_1\15.jpg'))
-    images.append(cv2.imread(r'Images\Example_1\16.jpg'))
-    images.append(cv2.imread(r'Images\Example_1\17.jpg'))
-    images.append(cv2.imread(r'Images\Example_1\18.jpg'))
-    images.append(cv2.imread(r'Images\Example_1\19.jpg'))
-    images.append(cv2.imread(r'Images\Example_1\20.jpg'))
+    images.append(cv2.imread(r'Images\Example_4\1.jpg'))
+    images.append(cv2.imread(r'Images\Example_4\2.jpg'))
+    images.append(cv2.imread(r'Images\Example_4\3.jpg'))
+    images.append(cv2.imread(r'Images\Example_4\4.jpg'))
+    images.append(cv2.imread(r'Images\Example_4\5.jpg'))
 
     # Build panorama using sample images
     build_panorama(images)

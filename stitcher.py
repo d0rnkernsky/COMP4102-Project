@@ -131,8 +131,8 @@ def build_panorama(images):
             stitchedImage = stitchedImage[y:y+h, x:x+w]
 
             # Show stitched image
-            plt.imshow(stitchedImage)
-            plt.show()
+            #plt.imshow(stitchedImage)
+            #plt.show()
 
             # Clear some memory
             del leftImage
@@ -140,6 +140,8 @@ def build_panorama(images):
                 del imageDict["image_1"]
             else:
                 del imageDict["stitched"]
+
+    return stitchedImage
             
 
 def initialize_image(images, imageDict, stitched, i=0):
@@ -223,14 +225,23 @@ def main():
     images = []
 
     # Read sample images from local directory
-    images.append(cv2.imread(r'Images\Example_4\1.jpg'))
-    images.append(cv2.imread(r'Images\Example_4\2.jpg'))
-    images.append(cv2.imread(r'Images\Example_4\3.jpg'))
-    images.append(cv2.imread(r'Images\Example_4\4.jpg'))
-    images.append(cv2.imread(r'Images\Example_4\5.jpg'))
+    images.append(cv2.imread(r'Images\Example_1\1.jpg'))
+    images.append(cv2.imread(r'Images\Example_1\2.jpg'))
+    images.append(cv2.imread(r'Images\Example_1\3.jpg'))
+    images.append(cv2.imread(r'Images\Example_1\4.jpg'))
 
     # Build panorama using sample images
-    build_panorama(images)
+    result = build_panorama(images)
+
+    # Display panorama
+    plt.imshow(result)
+    plt.show()
+
+    # Convert RGB image to BGR (for opencv compatibility)
+    result = cv2.cvtColor(result, cv2.COLOR_RGB2BGR)
+
+    # Save panorama to file
+    cv2.imwrite('result.jpg', result)
 
 if __name__ == "__main__":
     main()

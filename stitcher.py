@@ -1,8 +1,9 @@
 # Imports
-import numpy as np                       # Matrix operations
-import imutils                           # Image processing functions
-import cv2                               # OpenCV
-from matplotlib import pyplot as plt     # Graph plotting
+import numpy as np  # Matrix operations
+import imutils  # Image processing functions
+import cv2  # OpenCV
+from matplotlib import pyplot as plt  # Graph plotting
+
 
 # Function for building panorama from array of images
 def build_panorama(images):
@@ -19,12 +20,11 @@ def build_panorama(images):
 
     # Create dictionary for images info
     imageDict = {}
-
+    stitchedImage = None
     # Iterate through images, adding info to nested dictionary
     for i in range(1, len(images) + 1):
-
         # Initialize image dictionary
-        imageDict = initialize_image(images, imageDict, None, i = i)
+        imageDict = initialize_image(images, imageDict, None, i=i)
 
     # Iterate through images to build panorama
     for i in range(1, len(images) + 1):
@@ -38,18 +38,18 @@ def build_panorama(images):
 
         # Build panorama on right neighbour (if exists)
         if (i != len(images)):
-            
+
             # Create variable for right neighbour to simplify code
-            rightImage = imageDict["image_" + str(i+1)]
+            rightImage = imageDict["image_" + str(i + 1)]
 
             # Create descriptor matcher
             matcher = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
-            
+
             # Find matches for each descriptor
             matches = matcher.match(leftImage["features"], rightImage["features"])
 
             # Sort matches by distance
-            good_matches = sorted(matches, key = lambda x: x.distance)
+            good_matches = sorted(matches, key=lambda x: x.distance)
 
             # Compute homography matrix with >= 4 good matches
             if len(good_matches) >= 4:
@@ -68,7 +68,7 @@ def build_panorama(images):
                 leftPoints = np.float32(leftPoints).reshape(-1, 1, 2)
 
                 # UNCOMMENT to draw keypoints on images + display
-                
+
                 '''
                 # Draw circles over original images
                 img1_with_points = rightImage["grey"].copy()
@@ -93,7 +93,7 @@ def build_panorama(images):
 
                 # Get homography matrix between left image and right neighbour
                 # (using RANSAC)
-                (h_matrix, mask) = cv2.findHomography(rightPoints, 
+                (h_matrix, mask) = cv2.findHomography(rightPoints,
                                                       leftPoints,
                                                       cv2.RANSAC)
 
@@ -103,11 +103,10 @@ def build_panorama(images):
                 return
 
             # Warp right image using homography matrix
-            warpedImage = cv2.warpPerspective(rightImage["image"], 
-                                            h_matrix,
-                                            (rightImage["image"].shape[1] + leftImage["image"].shape[1],
-                                            rightImage["image"].shape[0]))
-
+            warpedImage = cv2.warpPerspective(rightImage["image"],
+                                              h_matrix,
+                                              (rightImage["image"].shape[1] + leftImage["image"].shape[1],
+                                               rightImage["image"].shape[0]))
 
             # UNCOMMENT to display warped image
             '''
@@ -127,9 +126,8 @@ def build_panorama(images):
             _, thresh = cv2.threshold(grey, 1, 255, cv2.THRESH_BINARY)
             contours, hierarchy = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
             cnt = contours[0]
-            x,y,w,h = cv2.boundingRect(cnt)
-            stitchedImage = stitchedImage[y:y+h, x:x+w]
-
+            x, y, w, h = cv2.boundingRect(cnt)
+            stitchedImage = stitchedImage[y:y + h, x:x + w]
             # Show stitched image
             plt.imshow(stitchedImage)
             plt.show()
@@ -140,7 +138,9 @@ def build_panorama(images):
                 del imageDict["image_1"]
             else:
                 del imageDict["stitched"]
-            
+
+    stitchedImage = cv2.cvtColor(stitchedImage, cv2.COLOR_BGR2GRAY)
+    cv2.imwrite('stitch-result.jpg', stitchedImage)
 
 def initialize_image(images, imageDict, stitched, i=0):
     '''
@@ -175,14 +175,14 @@ def initialize_image(images, imageDict, stitched, i=0):
         imageDict[index] = {}
 
         # Resize image for faster processing
-        images[i-1] = imutils.resize(images[i-1], width=400)
+        images[i - 1] = imutils.resize(images[i - 1], width=400)
 
         # Convert original image to RGB (for matplotlib compatibility)
-        images[i-1] = cv2.cvtColor(images[i-1], cv2.COLOR_BGR2RGB)
+        images[i - 1] = cv2.cvtColor(images[i - 1], cv2.COLOR_BGR2RGB)
 
         # Create variables for current image to simplify code
         thisImage = imageDict[index]
-        thisImage["image"] = images[i-1]
+        thisImage["image"] = images[i - 1]
 
         # Convert RGB image to greyscale to detect keypoints
         thisImage["grey"] = cv2.cvtColor(thisImage["image"], cv2.COLOR_RGB2GRAY)
@@ -190,7 +190,7 @@ def initialize_image(images, imageDict, stitched, i=0):
         # Find keypoints and descriptors
         feature_finder = cv2.AKAZE_create()
         thisImage["keypoints"], thisImage["features"] = feature_finder.detectAndCompute(thisImage["grey"], None)
-    
+
     # Initialize stitched image information
     else:
         # Find keypoints and descriptors
@@ -217,8 +217,8 @@ def initialize_image(images, imageDict, stitched, i=0):
     # Return initialized image dictionary
     return imageDict
 
-def main():
 
+def main():
     # Create array to hold sample images
     images = []
 
@@ -231,6 +231,7 @@ def main():
 
     # Build panorama using sample images
     build_panorama(images)
+
 
 if __name__ == "__main__":
     main()

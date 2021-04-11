@@ -9,7 +9,6 @@ import numpy as np
 import cv2 as cv
 import remove_helper as rh
 import time
-import tst
 import matplotlib.pyplot as plt
 
 PATH = ''
@@ -61,7 +60,6 @@ def select_area(ev, x, y, _1, _2):
         # cv.imshow('mask', mask_to_display)
 
         helper = rh.ObjectRemover(orig_img, mask)
-        # helper = tst.Inpainter(orig_img, mask)
         start = time.time()
         result = helper.do()
 

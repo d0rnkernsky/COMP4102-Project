@@ -6,11 +6,19 @@ if __name__ == '__main__':
     images = []
 
     # Read sample images from local directory
-    images.append(cv.imread(r'Images/Example_3/1.jpg'))
-    images.append(cv.imread(r'Images/Example_3/2.jpg'))
-    images.append(cv.imread(r'Images/Example_3/3.jpg'))
-    images.append(cv.imread(r'Images/Example_3/4.jpg'))
+    images.append(cv.imread(r'Images/ex5/1.jpg'))
+    images.append(cv.imread(r'Images/ex5/2.jpg'))
+    images.append(cv.imread(r'Images/ex5/3.jpg'))
+    images.append(cv.imread(r'Images/ex5/4.jpg'))
+    images.append(cv.imread(r'Images/ex5/5.jpg'))
 
     # Build panorama using sample images
-    st.build_panorama(images)
-    rm.remove('stitch-result.jpg')
+    stitch_result = st.build_panorama(images)
+
+    # Convert RGB image to BGR (for opencv compatibility)
+    result = cv.cvtColor(stitch_result, cv.COLOR_RGB2BGR)
+
+    # Save panorama to file
+    img_name = 'stitch-result.jpg'
+    cv.imwrite(img_name, result)
+    rm.remove(img_name)

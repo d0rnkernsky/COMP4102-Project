@@ -73,7 +73,7 @@ The image stitching application combines and transforms 4 images from the same s
 
 <br>
 <p align="center">
-  <img width="791" height="239" src="https://i.ibb.co/JyQhSFv/Picture1.jpg">
+  <img width="665" height="215" src="https://i.ibb.co/JyQhSFv/Picture1.jpg">
 </p>
 <p align="center">
   <i>Figure 1</i>.  A grid of 4 images that were taken from different viewpoints of the same scene.
@@ -82,7 +82,7 @@ The image stitching application combines and transforms 4 images from the same s
 
 <br>
 <p align="center">
-  <img width="791" height="399" src="https://i.ibb.co/vxbZcV4/Picture2.jpg">
+  <img width="593" height="299" src="https://i.ibb.co/vxbZcV4/Picture2.jpg">
 </p>
 <p align="center">
   <i>Figure 2</i>.  The panorama image result from the image stitching code, applied to the 4 images in Figure 1. 
@@ -93,7 +93,7 @@ Note that the resulting panorama image has some anomalies (see Figure 3). One of
 
  <br>
 <p align="center">
-  <img width="840" height="399" src="https://i.ibb.co/D50f1Zw/Picture3.jpg">
+  <img width="630" height="299" src="https://i.ibb.co/D50f1Zw/Picture3.jpg">
 </p>
 <p align="center">
   <i>Figure 3</i>.  The panorama image result, with highlighted anomalies.

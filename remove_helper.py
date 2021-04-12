@@ -188,8 +188,7 @@ class ObjectRemover:
         grey_image = cv.cvtColor(self.img_in_progress, cv.COLOR_BGR2GRAY).astype(float)
         grey_image[self.active_mask == 1] = None
 
-        gradients = np.array(np.gradient(grey_image))
-        gradient = np.nan_to_num(gradients)
+        gradient = np.nan_to_num(np.array(np.gradient(grey_image)))
         grad_val = np.sqrt(gradient[0] ** 2 + gradient[1] ** 2)
         grad = np.zeros([height, width, 2])
 
@@ -199,10 +198,11 @@ class ObjectRemover:
         for point in positions:
             patch = self.find_patch(point)
 
-            y_gradient = self.get_patch_data(gradient[0], patch)
-            x_gradient = self.get_patch_data(gradient[1], patch)
-            patch_grad = self.get_patch_data(grad_val, patch)
+            grad1, grad2 = gradient
+            y_gradient = self.get_patch_data(grad1, patch)
+            x_gradient = self.get_patch_data(grad2, patch)
 
+            patch_grad = self.get_patch_data(grad_val, patch)
             patch_pos = np.unravel_index(np.argmax(patch_grad), patch_grad.shape)
 
             x, y = point
@@ -227,13 +227,13 @@ class ObjectRemover:
         ph1, ph2 = target[0][0], target[0][1]
         pw1, pw2 = target[1][0], target[1][1]
 
-        best = None
-        best_match_difference = 0
         to_lab_image = cv.cvtColor(self.img_in_progress, cv.COLOR_RGB2LAB)
 
         patch_height = (ph2 - ph1 + 1)
         patch_width = (pw2 - pw1 + 1)
 
+        best = None
+        best_difference = 0
         for y in range(height - patch_height + 1):
             # we look at most pad pixels to left and right
             left_point = dst[1]
@@ -243,18 +243,34 @@ class ObjectRemover:
                 else left_point + pad - patch_width + 1
 
             for x in range(left, right):
-                source = [[y, y + patch_height - 1], [x, x + patch_width - 1]]
-                if self.get_patch_data(self.active_mask, source).sum() != 0:
-                    # because the inpainting region is filled with 1 the sum gives us its "area"
+                result = self.find_diff(x, y, to_lab_image, target, patch_height, patch_width)
+                if result is None:
                     continue
 
-                diff = self.get_patch_diff(to_lab_image, target, source)
-
-                if best is None or diff < best_match_difference:
-                    best_match_difference = diff
+                source, diff = result
+                if best is None or diff < best_difference:
+                    best_difference = diff
                     best = source
 
         return best
+
+    def find_diff(self, x, y, lab_image, target, patch_h, patch_w):
+        """
+            Returns a match with its difference, None if it's the inpainting region
+        """
+        y_source = [y, y + patch_h - 1]
+        x_source = [x, x + patch_w - 1]
+        source = [y_source, x_source]
+
+        if self.get_patch_data(self.active_mask, source).sum() != 0:
+            # because the inpainting region is filled with 1 the sum gives us its "area"
+            # and we don't consider this region to patches
+            return None
+
+        diff = self.get_patch_diff(lab_image, target, source)
+
+        return source, diff
+
 
     def inpaint_image(self, target, source):
         """
@@ -271,6 +287,7 @@ class ObjectRemover:
         for point in points:
             p1, p2 = point
             self.confidence[p1, p2] = patch_confidence
+
         mask = self.get_patch_data(self.active_mask, target_patch)
         to_rgb = mask.reshape(mask.shape[0], mask.shape[1], 1).repeat(3, axis=2)
 

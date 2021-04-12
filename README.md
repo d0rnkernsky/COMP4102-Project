@@ -7,6 +7,8 @@ Daniil Kulik 101138752
 #### Title:  
 Panorama creation with subsequent object removal
 
+#### Instructions to Run Code:
+
 #### Summary: 
 The ultimate goal of this project is to create a tool that can produce panoramas from 4-5 images. Subsequently, a user will be able to choose an object to remove from the panorama. This project will work with two computer vision problems: (1) image stitching to produce a panorama and (2) inpainting. 
 

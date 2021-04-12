@@ -43,7 +43,7 @@ def build_panorama(images):
             rightImage = imageDict["image_" + str(i+1)]
 
             # Create descriptor matcher
-            matcher = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
+            matcher = cv2.BFMatcher(cv2.NORM_L2, crossCheck=True)
             
             # Find matches for each descriptor
             matches = matcher.match(leftImage["features"], rightImage["features"])
@@ -95,7 +95,7 @@ def build_panorama(images):
                 # (using RANSAC)
                 (h_matrix, mask) = cv2.findHomography(rightPoints, 
                                                       leftPoints,
-                                                      cv2.RANSAC)
+                                                      cv2.RHO)
 
             # Throw error if not enough good matches are found
             else:
@@ -190,13 +190,13 @@ def initialize_image(images, imageDict, stitched, i=0):
         thisImage["grey"] = cv2.cvtColor(thisImage["image"], cv2.COLOR_RGB2GRAY)
 
         # Find keypoints and descriptors
-        feature_finder = cv2.AKAZE_create()
+        feature_finder = cv2.SIFT_create()
         thisImage["keypoints"], thisImage["features"] = feature_finder.detectAndCompute(thisImage["grey"], None)
     
     # Initialize stitched image information
     else:
         # Find keypoints and descriptors
-        feature_finder = cv2.AKAZE_create()
+        feature_finder = cv2.SIFT_create()
         kp, feat = feature_finder.detectAndCompute(stitched, None)
 
         # Create dictionary entry for stitched image

@@ -67,6 +67,40 @@ The project evaluation will be based on several criteria:
 |8    | Mar 24 - Mar 31| (Extra time: Assist Daniil, work on extra tasks)                   | Complete app testing                                           |
 |9    | Mar 31 - Apr ? |                                                        Prepare demonstration/presentation                                           |
 
+#### Final Results:
+
+The image stitching application combines and transforms 4 images from the same scene (see Figure 1) into a single panorama image (see Figure 2).
+
+<br>
+<p align="center">
+  <img width="791" height="239" src="https://i.ibb.co/JyQhSFv/Picture1.jpg">
+</p>
+<p align="center">
+  <i>Figure 1</i>.  A grid of 4 images that were taken from different viewpoints of the same scene.
+</p>
+<br>
+
+<br>
+<p align="center">
+  <img width="791" height="399" src="https://i.ibb.co/vxbZcV4/Picture2.jpg">
+</p>
+<p align="center">
+  <i>Figure 2</i>.  The panorama image result from the image stitching code, applied to the 4 images in Figure 1. 
+</p>
+<br>
+
+Note that the resulting panorama image has some anomalies (see Figure 3). One of the objects (circled in red) appears to be transformed or aligned incorrectly. There are also two areas (circled in green) that have a thin black line between the left and right images, likely due to an error in the overlay method. 
+
+ <br>
+<p align="center">
+  <img width="840" height="399" src="https://i.ibb.co/D50f1Zw/Picture3.jpg">
+</p>
+<p align="center">
+  <i>Figure 3</i>.  The panorama image result, with highlighted anomalies.
+</p>
+<br>
+
+For future work, other overlay methods should be considered for stitching the final image, as well as different parameters, such as the error threshold, for the outlier and keypoint detection algorithms.
 
 #### References:
 1. Criminisi, A., Pérez, P., & Toyama, K. (2004). Region filling and object removal by exemplar-based image inpainting. IEEE Transactions on Image Processing. https://doi.org/10.1109/TIP.2004.833105

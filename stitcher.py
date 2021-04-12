@@ -57,7 +57,7 @@ def build_panorama(images):
                 # Get points corresponding to good matches
                 leftPoints = []
                 rightPoints = []
-                for m in range(0, 40):
+                for m in range(0, len(good_matches)):
                     # Check that keypoint exists
                     if (len(leftImage["keypoints"]) >= good_matches[m].trainIdx):
                         rightPoints.append(rightImage["keypoints"][good_matches[m].trainIdx].pt)

@@ -8,6 +8,11 @@ Daniil Kulik 101138752
 Panorama creation with subsequent object removal
 
 #### Instructions to Run Code:
+1) install all packages: pip install requirements.txt
+2) python3 main.py Example_5 to run the program
+3) in the pop up CV window select an object to delete
+4) the result will be saved in the root project folder as result.jpg
+
 
 #### Video Demonstration:
 

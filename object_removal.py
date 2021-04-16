@@ -8,7 +8,6 @@ import numpy as np
 import cv2 as cv
 import remove_helper as rh
 import time
-import tst
 
 PATH = ''
 ESC_KEY = 27
@@ -74,7 +73,7 @@ def remove_from_scene(mask):
     result = helper.do()
     end = time.time() - start
     print(f'Total took: {end}')
-
+    cv.imshow('result', result)
     cv.imwrite(f'result.jpg', result)
 
 

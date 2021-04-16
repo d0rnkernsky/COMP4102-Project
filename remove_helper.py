@@ -8,10 +8,9 @@ import cv2 as cv
 import numpy as np
 import matplotlib.pyplot as plt
 
-
 class ObjectRemover:
     """
-        default patch size is defined in the paper
+        patch size is set to 15 as a trade off between time and inpainting quality
         expecting mask to have only 1 or 0, where 1 indicates a pixel to remove
     """
 

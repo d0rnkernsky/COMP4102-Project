@@ -15,7 +15,7 @@ class ObjectRemover:
         expecting mask to have only 1 or 0, where 1 indicates a pixel to remove
     """
 
-    def __init__(self, image, mask, patch_size=9):
+    def __init__(self, image, mask, patch_size=15):
         self.orig_image = image.astype('uint8')
         self.orig_mask = mask.astype('uint8')
         self.patch_size = patch_size
@@ -116,9 +116,6 @@ class ObjectRemover:
         """
         x, x1 = patch[0]
         y, y1 = patch[1]
-
-        if source[x:x1 + 1, y:y1 + 1].shape[0] != 9:
-            tq = 1
 
         return source[x:x1 + 1, y:y1 + 1]
 

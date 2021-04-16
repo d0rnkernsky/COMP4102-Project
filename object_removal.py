@@ -4,12 +4,11 @@
 # COMP 4102 Course Project
 
 import sys
-import os
 import numpy as np
 import cv2 as cv
 import remove_helper as rh
 import time
-import matplotlib.pyplot as plt
+import tst
 
 PATH = ''
 ESC_KEY = 27
@@ -50,36 +49,33 @@ def select_area(ev, x, y, _1, _2):
         drawing = False
         draw_rect(img, x_init, y_init, x, y)
 
-        # prepare mask
-        mask = np.full(img.shape[:2], 0, dtype='uint8')
-
-        print(f'Removed region is {y-y_init} by {x-x_init} pixels (HxW)')
-        mask[y_init:y, x_init:x] = 1
-
-        # mask_to_display = mask * 255.0
-        # cv.imshow('mask', mask_to_display)
-
-        helper = rh.ObjectRemover(orig_img, mask)
-        start = time.time()
-        result = helper.do()
-
-        cv.imwrite(f'result.jpg', result)
-        plt.imshow(result)
-        plt.draw()
-
-        end = time.time() - start
-        print(f'Total took: {end}')
+        mask = prepare_mask(x, y)
+        remove_from_scene(mask)
 
 
-def clean_up():
-    """
-        Deletes temp files 
-    :return: 
-    """
-    if os.path.exists(f'{PATH}/{rh.UPDATED_MASK}'):
-        os.remove(f'{PATH}/{rh.UPDATED_MASK}')
-    if os.path.exists(f'{PATH}/{rh.INTERM_IMG}'):
-        os.remove(f'{PATH}/{rh.INTERM_IMG}')
+def prepare_mask(x, y):
+    global x_init, y_init, img
+    # prepare mask
+    mask = np.full(img.shape[:2], 0, dtype='uint8')
+
+    print(f'Removed region is {y - y_init} by {x - x_init} pixels (HxW)')
+    mask[y_init:y, x_init:x] = 1
+
+    print(f'mask rect [{y_init}:{y}], [{x_init}:{x}]')
+
+    # mask_to_display = mask * 255.0
+    # cv.imshow('mask', mask_to_display)
+    return mask
+
+
+def remove_from_scene(mask):
+    helper = rh.ObjectRemover(orig_img, mask)
+    start = time.time()
+    result = helper.do()
+    end = time.time() - start
+    print(f'Total took: {end}')
+
+    cv.imwrite(f'result.jpg', result)
 
 
 def main():
@@ -97,8 +93,6 @@ def remove(img_path):
         print(f'Cannot find image {img_path}')
         exit(-1)
 
-    clean_up()
-
     global img, orig_img
 
     orig_img = np.copy(in_img)
@@ -114,7 +108,6 @@ def remove(img_path):
             break
 
     cv.destroyAllWindows()
-    clean_up()
 
 
 if __name__ == '__main__':

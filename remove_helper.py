@@ -7,10 +7,6 @@
 import cv2 as cv
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.ndimage.filters import convolve
-
-UPDATED_MASK = 'updated_mask.jpg'
-INTERM_IMG = 'itermedite_img.jpg'
 
 
 class ObjectRemover:
@@ -39,10 +35,6 @@ class ObjectRemover:
         self.confidence = None
 
     def do(self):
-        """
-            Main loop
-        """
-
         # initialize state
         self.data = np.zeros(self.orig_image.shape[:2])
         self.confidence = (1 - self.orig_mask).astype(float)
@@ -51,18 +43,17 @@ class ObjectRemover:
         self.active_mask = np.copy(self.orig_mask)
         self.img_in_progress = np.copy(self.orig_image)
 
-        done = False
-        while not done:
+        while self.active_mask.sum() != 0:
             self.iteration_update()
 
             target = self.get_highest_priority()
             source = self.get_source_patch(target)
             self.inpaint_image(target, source)
 
-            done = self.is_complete()
             # cv.imwrite(f'{self.path}/{UPDATED_MASK}', self.active_mask)
             # cv.imwrite(f'{self.path}/{INTERM_IMG}', self.img_in_progress)
 
+        plt.close()
         return self.img_in_progress.copy()
 
     def iteration_update(self):
@@ -115,8 +106,7 @@ class ObjectRemover:
             patch = self.find_patch(p)
             x, y = p
 
-            updated[x, y] = sum(sum(self.get_patch_data(self.confidence, patch))) \
-                            / self.get_patch_area(patch)
+            updated[x, y] = np.sum(self.get_patch_data(self.confidence, patch)) / self.get_patch_area(patch)
 
         self.confidence = updated
 
@@ -126,6 +116,9 @@ class ObjectRemover:
         """
         x, x1 = patch[0]
         y, y1 = patch[1]
+
+        if source[x:x1 + 1, y:y1 + 1].shape[0] != 9:
+            tq = 1
 
         return source[x:x1 + 1, y:y1 + 1]
 
@@ -194,7 +187,7 @@ class ObjectRemover:
 
         positions = np.argwhere(self.fill_border == 1)
 
-        # traverse at the inpainting region
+        # traverse around the inpainted region
         for point in positions:
             patch = self.find_patch(point)
 
@@ -217,33 +210,27 @@ class ObjectRemover:
         """
         return np.unravel_index(self.priority.argmax(), self.priority.shape)
 
-    def get_source_patch(self, dst, pad=200):
+    def get_source_patch(self, dst, pad_y=100, pad_x=100):
         """
             Returns pixels for patch
         """
         target = self.find_patch(dst)
-        height, width = self.img_in_progress.shape[:2]
-
-        ph1, ph2 = target[0][0], target[0][1]
-        pw1, pw2 = target[1][0], target[1][1]
-
         to_lab_image = cv.cvtColor(self.img_in_progress, cv.COLOR_RGB2LAB)
-
-        patch_height = (ph2 - ph1 + 1)
-        patch_width = (pw2 - pw1 + 1)
 
         best = None
         best_difference = 0
-        for y in range(height - patch_height + 1):
-            # we look at most pad pixels to left and right
-            left_point = dst[1]
-            left = 0 if left_point - pad < 0 else left_point - pad
 
-            right = width - patch_width + 1 if left_point + pad > self.orig_image.shape[1] \
-                else left_point + pad - patch_width + 1
+        img_h, img_w = self.orig_image.shape[:2]
+        center_y = dst[0]
+        center_x = dst[1]
 
-            for x in range(left, right):
-                result = self.find_diff(x, y, to_lab_image, target, patch_height, patch_width)
+        start_y = max(0, center_y - pad_y - self.patch_size)
+        end_y = min(img_h - self.patch_size + 1, center_y + pad_y - self.patch_size)
+        for y in range(start_y, end_y):
+            start_x = max(0, center_x - pad_x - self.patch_size + 1)
+            end_x = min(img_w - self.patch_size + 1, center_x + pad_x)
+            for x in range(start_x, end_x):
+                result = self.find_diff(x, y, to_lab_image, target)
                 if result is None:
                     continue
 
@@ -254,12 +241,15 @@ class ObjectRemover:
 
         return best
 
-    def find_diff(self, x, y, lab_image, target, patch_h, patch_w):
+    def find_mask_right_border(self):
+        return np.where(self.active_mask == 1)[1][-1]
+
+    def find_diff(self, x, y, lab_image, target):
         """
             Returns a match with its difference, None if it's the inpainting region
         """
-        y_source = [y, y + patch_h - 1]
-        x_source = [x, x + patch_w - 1]
+        y_source = [y, y + self.patch_size - 1]
+        x_source = [x, x + self.patch_size - 1]
         source = [y_source, x_source]
 
         if self.get_patch_data(self.active_mask, source).sum() != 0:
@@ -270,7 +260,6 @@ class ObjectRemover:
         diff = self.get_patch_diff(lab_image, target, source)
 
         return source, diff
-
 
     def inpaint_image(self, target, source):
         """
@@ -310,20 +299,9 @@ class ObjectRemover:
 
         target_data = self.get_patch_data(image, target) * to_rgb_mask
         source_data = self.get_patch_data(image, source) * to_rgb_mask
-        d1 = ((target_data - source_data) ** 2).sum()
 
-        t1, t2 = target[0][0], target[1][0]
-        s1, s2 = source[0][0], source[1][0]
-
-        d2 = np.sqrt((t1 - s1) ** 2 + (t2 - s2) ** 2)
-        return d1 + d2
-
-    def is_complete(self):
-        """
-            Check if there are pixel to be filled
-        """
-        # just sum all pixel if 1 is in the mask than the alogrithm is not done
-        return self.active_mask.sum() == 0
+        # computing MSE
+        return np.sum((target_data - source_data) ** 2) / np.sum(source_data.shape)
 
     def set_to_patch(self, dst, dst_patch, data):
         """

@@ -110,6 +110,28 @@ Note that the resulting panorama image has some anomalies (see Figure 3). One of
 </p>
 <br>
 
+Object removal results:
+
+ <br>
+<p align="center">
+  <img width="711" height="473" src="https://i.ibb.co/PQVKFNM/Capture.jpg">
+</p>
+<p align="center">
+  <i>Figure 4</i>.  Object removal results.
+</p>
+<br>
+
+Results from image stitching, object removal, and inpainting combined:
+
+ <br>
+<p align="center">
+  <img width="1213" height="532" src="https://i.ibb.co/BP46RRZ/asdjsal.jpg">
+</p>
+<p align="center">
+  <i>Figure 5</i>.  Overall application results.
+</p>
+<br>
+
 For future work, other overlay methods should be considered for stitching the final image, as well as different parameters, such as the error threshold, for the outlier and keypoint detection algorithms.
 
 #### References:

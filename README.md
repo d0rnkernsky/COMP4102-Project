@@ -18,13 +18,13 @@ Panorama creation with subsequent object removal
 https://youtu.be/AmBbqENJUoA
 
 #### Summary: 
-The ultimate goal of this project is to create a tool that can produce panoramas from 4-5 images. Subsequently, a user will be able to choose an object to remove from the panorama. This project will work with two computer vision problems: (1) image stitching to produce a panorama and (2) inpainting. 
+The ultimate goal of this project is to create a tool that can produce panoramas from 4 images. Subsequently, a user will be able to choose an object to remove from the panorama. This project will work with two computer vision problems: (1) image stitching to produce a panorama and (2) inpainting. 
 
 #### Background:
 The object removal part of the project is based on the approach proposed in [1]. In this project, we will work on handling depth ambiguities and curved object patching with better precision. For the image stitching, we will employ the method proposed in [2] and extend it to produce seamless panoramas with 3+ source images with compensating for parallax to accommodate large motion.
 
 #### The Challenge:
-The task of image stitching to produce a panorama (see Figure 1) can be completed with moderate difficulty using OpenCV functions. This task is made more complex with the project requirement of producing panoramas from 4-5 images, rather than using only 2 source images. With these additions, there will be several "middle" images that will need to be matched to descriptors on both its left and right neighbours. Not only will the added images increase the complexity of image stitching, but they will also create a higher potential for error due to slight variations between the features of each image (e.g. brightness, rotation, etc.). The process of creating a panorama for 4-5 images will require more time than the traditional 2-image panorama, to ensure a seamless result.
+The task of image stitching to produce a panorama (see Figure 1) can be completed with moderate difficulty using OpenCV functions. This task is made more complex with the project requirement of producing panoramas from 4 images, rather than using only 2 source images. With these additions, there will be several "middle" images that will need to be matched to descriptors on both its left and right neighbours. Not only will the added images increase the complexity of image stitching, but they will also create a higher potential for error due to slight variations between the features of each image (e.g. brightness, rotation, etc.). The process of creating a panorama for 4 images will require more time than the traditional 2-image panorama, to ensure a seamless result.
 
 <br>
 <p align="center">
@@ -54,7 +54,7 @@ By completing this project, we hope to learn how to:
 - perform inpainting with OpenCV.
 
 #### Goals and Deliverables: 
-The ultimate goal of this project is to build a program that is capable of producing a panorama image by combining several images (4-5) of the same scene. Additionally, the program will provide the user with a feature for object removal from the scene. The user will be able to upload several images of a scene into the program, create a panorama, and manually select a contour of the object to be removed from the scene. The removed object spot will be inpainted with a suitable background. 
+The ultimate goal of this project is to build a program that is capable of producing a panorama image by combining several images (4) of the same scene. Additionally, the program will provide the user with a feature for object removal from the scene. The user will be able to upload several images of a scene into the program, create a panorama, and manually select a contour of the object to be removed from the scene. The removed object spot will be inpainted with a suitable background. 
 
 Extra goals include extending panorama generation in more than one direction. Traditional panorama creation tools allow horizontal or vertical panoramas. If time permits, diagonal panoramas will be explored. Another possible extension is to create a mobile application with the same functionality that can work with limited computational resources.
 
